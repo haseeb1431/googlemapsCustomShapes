@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+    <title>Google Map Custom Shape Example</title>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=&sensor=false&libraries=geometry"></script>
+    <script src="googlemapsCustomShape.js"></script>
+
+
+
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map-canvas {
+            float: inherit;
+            height: 100%;
+        }
+
+        #map-controls {
+            margin: 20px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="map-controls">
+        Radius1:
+        <input type="text" id="txtRadius1" value="30000" /><br />
+        Radius1:
+        <input type="text" id="txtRadius2" value="30000" /><br />
+        Center:
+        <input type="text" id="txtCenter" value="33.588, 73.026" /><br />
+
+
+        <input type="button" id="btnDraw" value="Draw" onclick="gmapsExample.drawCustomShapes();" />
+        <input type="button" id="btnClear" value="Clear" onclick="clearOverlays();" />
+
+    </div>
+    <div id="map-canvas" />
+
+    <script type="text/javascript">
+
+        //custom namespace Instead of Global namespace
+        var gmapsExample = {};
+
+        //Markers array to track added markers on the top
+        //will be used to remove them later on
+        gmapsExample.markerArray = [];
+
+
+
+        gmapsExample.drawCustomShapes = function () {
+            var radius1 = document.getElementById("txtRadius1").value;
+            var radius2 = document.getElementById("txtRadius2").value;
+            var centerCordinates = document.getElementById("txtCenter").value;
+            var centerLatLong = new google.maps.LatLng(centerCordinates.split(",")[0], centerCordinates.split(",")[1]);
+            var shape = gmapsCustomShapes.Polygon.Ellipse(centerLatLong, radius1, radius2, 0, "#000000", 2, 1, "#ffff00", 0.5);
+
+            var marker = shape.setMap(gmapsExample.map);
+            gmapsExample.markerArray.push(marker);
+
+        }
+
+        gmapsExample.clearOverlays = function () {
+            for (var i = 0; i < markersArray.length; i++) {
+                gmapsExample.markerArray[i].setMap(null);
+            }
+            gmapsExample.markerArray = [];
+        }
+
+
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(33.588, 73.026),
+                zoom: 8,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            gmapsExample.map = new google.maps.Map(document.getElementById("map-canvas"),
+                mapOptions);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</body>
+</html>
